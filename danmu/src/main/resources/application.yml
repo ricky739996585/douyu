@@ -1,8 +1,5 @@
-application:
-  version: ${project.version}
-
 server:
-  port: 11000
+  port: 11001
 
 spring:
   datasource:
@@ -20,7 +17,7 @@ druid:
 #mybatis-plus
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
-  typeAliasesPackage: com.ricky.player.po
+  typeAliasesPackage: com.ricky.danmu.po
   global-config:
     id-type: 3
     field-strategy: 2
