@@ -20,7 +20,7 @@ public class Film extends Model<Film> implements Serializable {
      * 电影信息表
      */
     @TableId
-    private Integer id;
+    private Long id;
     /**
      * 名称
      */
@@ -41,17 +41,6 @@ public class Film extends Model<Film> implements Serializable {
      * 点播次数
      */
     private Integer demandNum;
-
-    /**
-     * 创建时间
-     */
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date createTime;
-    /**
-     * 修改时间
-     */
-    private Date updateTime;
-
 
     /**
      * 版本号

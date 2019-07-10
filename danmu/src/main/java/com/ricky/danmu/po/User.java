@@ -18,7 +18,7 @@ public class User extends Model<User> implements Serializable {
      * 用户表
      */
     @TableId
-    private Integer id;
+    private Long id;
     /**
      * 用户ID
      */

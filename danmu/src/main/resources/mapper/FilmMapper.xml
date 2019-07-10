@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ricky.danmu.dao.FilmDao">
+
+    <update id="updateDemand">
+        update film set score = score + #{score},demand_num = demand_num + 1 where name = #{name}
+    </update>
+
+    <update id="updatePlayingFilm">
+        update film set score = 0,play_num = play_num + 1,status = 0 where status = 1
+    </update>
+
+    <update id="changeFilmToPlaying">
+        update film as a,
+        (select * from film where status = 0 order by score desc,update_time limit 1) as b
+        set a.status = 1 where a.id = b.id
+
+    </update>
+
+
+</mapper>

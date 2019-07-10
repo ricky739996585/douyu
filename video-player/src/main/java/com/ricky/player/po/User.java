@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 @TableName("user")
 @Data
@@ -19,7 +18,7 @@ public class User extends Model<User> implements Serializable {
      * 用户表
      */
     @TableId
-    private Integer id;
+    private Long id;
     /**
      * 用户ID
      */

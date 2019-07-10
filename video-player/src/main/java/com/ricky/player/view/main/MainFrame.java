@@ -21,12 +21,15 @@ package com.ricky.player.view.main;
 
 import com.google.common.eventbus.Subscribe;
 import com.ricky.player.event.*;
+import com.ricky.player.service.FilmService;
 import com.ricky.player.view.BaseFrame;
 import com.ricky.player.view.action.StandardAction;
 import com.ricky.player.view.action.mediaplayer.MediaPlayerActions;
 import com.ricky.player.view.action.mediaplayer.RendererAction;
 import com.ricky.player.view.snapshot.SnapshotView;
 import net.miginfocom.swing.MigLayout;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import uk.co.caprica.vlcj.media.MediaSlaveType;
 import uk.co.caprica.vlcj.media.TrackType;
 import uk.co.caprica.vlcj.player.base.*;
@@ -45,8 +48,11 @@ import static com.ricky.player.Application.application;
 import static com.ricky.player.Application.resources;
 import static com.ricky.player.view.action.Resource.resource;
 
+@Component
 @SuppressWarnings("serial")
 public final class MainFrame extends BaseFrame {
+    @Autowired
+    private FilmService filmService;
 
     private static final String ACTION_EXIT_FULLSCREEN = "exit-fullscreen";
 
@@ -287,7 +293,8 @@ public final class MainFrame extends BaseFrame {
         }
         playbackMenu.add(new JSeparator());
         for (Action action : mediaPlayerActions.playbackControlActions()) {
-            playbackMenu.add(new JMenuItem(action) { // FIXME need a standardmenuitem that disables the tooltip like this, very poor show...
+            // FIXME need a standardmenuitem that disables the tooltip like this, very poor show...
+            playbackMenu.add(new JMenuItem(action) {
                 @Override
                 public String getToolTipText() {
                     return null;
@@ -331,7 +338,8 @@ public final class MainFrame extends BaseFrame {
         videoMenu.add(new JSeparator());
         videoZoomMenu = new JMenu(resource("menu.video.item.zoom").name());
         videoZoomMenu.setMnemonic(resource("menu.video.item.zoom").mnemonic());
-        addActions(mediaPlayerActions.videoZoomActions(), videoZoomMenu/*, true*/); // FIXME how to handle zoom 1:1 and fit to window - also, probably should not use addActions to select
+        // FIXME how to handle zoom 1:1 and fit to window - also, probably should not use addActions to select
+        addActions(mediaPlayerActions.videoZoomActions(), videoZoomMenu/*, true*/);
         videoMenu.add(videoZoomMenu);
         videoAspectRatioMenu = new JMenu(resource("menu.video.item.aspectRatio").name());
         videoAspectRatioMenu.setMnemonic(resource("menu.video.item.aspectRatio").mnemonic());
@@ -466,8 +474,12 @@ public final class MainFrame extends BaseFrame {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        videoContentPane.showDefault();
-                        application().post(StoppedEvent.INSTANCE);
+                        //TODO 设置正在播放的电影 status = 0,并设置排名最高的电影status = 1
+                        videoContentPane.showVideo();
+                        String mrl = "C:\\Users\\Administrator\\Music\\MV\\b.mp4";
+                        application().addRecentMedia(mrl);
+                        application().mediaPlayer().media().play(mrl);
+                        System.out.println("--------------------");
                     }
                 });
             }

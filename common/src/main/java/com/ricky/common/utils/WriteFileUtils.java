@@ -15,7 +15,7 @@ import java.util.concurrent.Future;
  * Date: 2018/8/31
  * Time: 10:10
  */
-public class WriteFileDemo {
+public class WriteFileUtils {
     private static int a =1;
 
     public static void main(String[] args) throws IOException {
@@ -24,33 +24,6 @@ public class WriteFileDemo {
 //        appendDataToFile("C:/Users/Administrator/Desktop/a.txt","123");
         String filename = "C:/Users/Administrator/Desktop/a.txt";
         writeDataAsy(filename,"abc21561");
-//        File file = new File(filename);
-//        InputStream inputStream = new FileInputStream(filename);
-//        byte[] msg = new byte[(int) file.length()];
-//        inputStream.read(msg);
-//        inputStream.close();
-//
-//        System.out.println(new String(msg));
-//
-//        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename),"GBK"));
-//        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:/Users/Administrator/Desktop/c.txt",true)));
-//        String line = null;
-//        while ((line = br.readLine())!=null){
-//            bw.write(line);
-//            bw.write("\r\n");
-//        }
-//        bw.flush();
-//        br.close();
-//        bw.close();
-//
-//        Scanner sc = new Scanner(new FileInputStream(filename),"GBK");
-//        PrintWriter pw = new PrintWriter(new FileOutputStream("C:/Users/Administrator/Desktop/b.txt",true));
-//        while (sc.hasNext()){
-//            pw.println(sc.next());
-//        }
-//        sc.close();
-//        pw.close();
-
     }
 
     public static void writeDataToFile(String path,String content){
@@ -63,11 +36,6 @@ public class WriteFileDemo {
             buffer.flip();
             fc.write( buffer);
             System.out.println("写入数据成功！");
-//            Selector selector = Selector.open();
-//            Channel channel = SocketChannel.open();
-//            ((SocketChannel) channel).configureBlocking(false);
-//            SelectionKey selectionKey = ((SocketChannel) channel).register(selector,SelectionKey.OP_READ);
-//            selectionKey.interestOps();
         } catch (Exception e) {
             e.printStackTrace();
         }

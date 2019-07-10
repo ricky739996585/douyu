@@ -1,5 +1,5 @@
 
-package com.ricky.player.po;
+package com.ricky.danmu.po;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -9,36 +9,34 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
-@TableName("film")
+@TableName("score_detail")
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Film extends Model<Film> implements Serializable {
+public class ScoreDetail extends Model<ScoreDetail> implements Serializable {
 
     /**
-     * 电影信息表
+     * 积分详情表
      */
     @TableId
     private Long id;
     /**
-     * 名称
+     * 用户ID
      */
-    private String name;
+    private Long userId;
     /**
-     * 积分数
+     * 第三方用户ID
+     */
+    private String uuid;
+
+    /**
+     * 操作类型（点播：10,查询积分：20,打卡：30）
+     */
+    private Integer operationType;
+    /**
+     * 产生积分数
      */
     private Integer score;
-    /**
-     * 播放链接
-     */
-    private String url;
-    /**
-     * 播放次数
-     */
-    private Integer playNum;
-    /**
-     * 点播次数
-     */
-    private Integer demandNum;
+
 
     /**
      * 版本号

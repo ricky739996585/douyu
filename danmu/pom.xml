@@ -20,10 +20,15 @@
     <dependencies>
         <dependency>
             <groupId>com.ricky</groupId>
-            <artifactId>douyu</artifactId>
+            <artifactId>common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
+        <!--斗鱼SDK-->
+        <dependency>
+            <groupId>com.yycdev</groupId>
+            <artifactId>douyu-sdk</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
     </dependencies>
 
