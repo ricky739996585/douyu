@@ -25,3 +25,9 @@ logs/*
 /nbdist/
 /.nb-gradle/
 /build/
+
+### maven target ###
+common/target/
+danmu/target/
+video-player/target/
+=======

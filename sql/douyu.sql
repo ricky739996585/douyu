@@ -11,7 +11,7 @@
  Target Server Version : 50723
  File Encoding         : 65001
 
- Date: 09/07/2019 11:58:36
+ Date: 10/07/2019 16:55:31
 */
 
 SET NAMES utf8mb4;
@@ -28,6 +28,7 @@ CREATE TABLE `film`  (
   `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '播放链接',
   `play_num` int(11) DEFAULT NULL COMMENT '播放次数',
   `demand_num` int(11) DEFAULT NULL COMMENT '点播次数',
+  `status` int(3) DEFAULT NULL COMMENT '状态（0：未播放,1：正在播放）',
   `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
@@ -40,7 +41,8 @@ DROP TABLE IF EXISTS `score_detail`;
 CREATE TABLE `score_detail`  (
   `id` bigint(20) NOT NULL COMMENT 'ID',
   `user_id` bigint(20) DEFAULT NULL COMMENT '用户ID',
-  `operation_type` int(3) DEFAULT NULL COMMENT '操作类型',
+  `uuid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '第三方用户ID',
+  `operation_type` int(3) DEFAULT NULL COMMENT '操作类型（点播：10,查询积分：20,打卡：30）',
   `score` int(11) DEFAULT NULL COMMENT '产生积分数',
   `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
