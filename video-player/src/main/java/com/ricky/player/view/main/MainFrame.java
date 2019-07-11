@@ -21,15 +21,13 @@ package com.ricky.player.view.main;
 
 import com.google.common.eventbus.Subscribe;
 import com.ricky.player.event.*;
-import com.ricky.player.service.FilmService;
+import com.ricky.player.utils.DataBaseUtils;
 import com.ricky.player.view.BaseFrame;
 import com.ricky.player.view.action.StandardAction;
 import com.ricky.player.view.action.mediaplayer.MediaPlayerActions;
 import com.ricky.player.view.action.mediaplayer.RendererAction;
 import com.ricky.player.view.snapshot.SnapshotView;
 import net.miginfocom.swing.MigLayout;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import uk.co.caprica.vlcj.media.MediaSlaveType;
 import uk.co.caprica.vlcj.media.TrackType;
 import uk.co.caprica.vlcj.player.base.*;
@@ -39,6 +37,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.sql.Connection;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
@@ -48,11 +47,15 @@ import static com.ricky.player.Application.application;
 import static com.ricky.player.Application.resources;
 import static com.ricky.player.view.action.Resource.resource;
 
-@Component
+
 @SuppressWarnings("serial")
 public final class MainFrame extends BaseFrame {
-    @Autowired
-    private FilmService filmService;
+
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/user?useSSL=true";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "123456";
+
+    private static Integer limit = 1;
 
     private static final String ACTION_EXIT_FULLSCREEN = "exit-fullscreen";
 
@@ -474,12 +477,24 @@ public final class MainFrame extends BaseFrame {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        //TODO 设置正在播放的电影 status = 0,并设置排名最高的电影status = 1
-                        videoContentPane.showVideo();
-                        String mrl = "C:\\Users\\Administrator\\Music\\MV\\b.mp4";
-                        application().addRecentMedia(mrl);
-                        application().mediaPlayer().media().play(mrl);
-                        System.out.println("--------------------");
+
+                        if(limit%2 == 0){
+                            //获取排名最高的电影
+                            Connection connection = DataBaseUtils.getConnection(JDBC_URL, USERNAME, PASSWORD);
+                            HashMap<String, Object> highFilm = DataBaseUtils.getHighFilm(connection);
+                            //设置正在播放的电影 status = 0
+                            DataBaseUtils.updatePlayingFilm(connection);
+                            //设置排名最高的电影status = 1
+                            DataBaseUtils.updateFilmStatus(connection,highFilm.get("id").toString());
+                            videoContentPane.showVideo();
+                            String mrl = highFilm.get("url").toString();
+//                            String mrl = "C:\\Users\\Administrator\\Music\\MV\\test.mp4";
+                            System.out.println(mrl);
+                            application().addRecentMedia(mrl);
+                            application().mediaPlayer().media().play(mrl);
+                        }
+                        limit++;
+
                     }
                 });
             }

@@ -49,7 +49,7 @@ import static com.ricky.player.Application.application;
 /**
  * Application entry-point.
  */
-@Component
+
 public class VlcjPlayer implements RendererDiscovererEventListener {
 
     private static final NativeStreams nativeStreams;

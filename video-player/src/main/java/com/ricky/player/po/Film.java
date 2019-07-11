@@ -41,6 +41,11 @@ public class Film extends Model<Film> implements Serializable {
     private Integer demandNum;
 
     /**
+     * 状态
+     */
+    private Integer status;
+
+    /**
      * 版本号
      */
 
