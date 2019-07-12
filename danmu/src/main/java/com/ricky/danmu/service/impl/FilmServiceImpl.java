@@ -1,9 +1,12 @@
 
 package com.ricky.danmu.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.ricky.common.constant.RabbitConstant;
 import com.ricky.common.enums.OperationType;
+import com.ricky.common.enums.WriteType;
 import com.ricky.danmu.dao.FilmDao;
 import com.ricky.danmu.dao.UserDao;
 import com.ricky.danmu.po.Film;
@@ -13,6 +16,7 @@ import com.ricky.danmu.service.FilmService;
 import com.ricky.danmu.service.ScoreDetailService;
 import com.ricky.danmu.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +32,8 @@ public class FilmServiceImpl extends ServiceImpl<FilmDao, Film> implements FilmS
     private UserDao userDao;
     @Autowired
     private ScoreDetailService scoreDetailService;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     /**
      * 点播操作
@@ -82,6 +88,11 @@ public class FilmServiceImpl extends ServiceImpl<FilmDao, Film> implements FilmS
         if(!result3){
             throw new RuntimeException();
         }
+        //发送消息修改播放列表内容
+        JSONObject data = new JSONObject();
+        data.put("writeType", WriteType.UPDATE_FILM.getType());
+        rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data.toString().getBytes());
+
     }
 
 }

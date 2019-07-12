@@ -19,9 +19,13 @@
 
 package com.ricky.player.view.main;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.eventbus.Subscribe;
+import com.ricky.common.constant.RabbitConstant;
+import com.ricky.common.enums.WriteType;
 import com.ricky.player.event.*;
 import com.ricky.player.utils.DataBaseUtils;
+import com.ricky.player.utils.RabbitMQUtils;
 import com.ricky.player.view.BaseFrame;
 import com.ricky.player.view.action.StandardAction;
 import com.ricky.player.view.action.mediaplayer.MediaPlayerActions;
@@ -37,10 +41,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 import java.util.prefs.Preferences;
 
 import static com.ricky.player.Application.application;
@@ -489,6 +495,20 @@ public final class MainFrame extends BaseFrame {
                             videoContentPane.showVideo();
                             String mrl = highFilm.get("url").toString();
 //                            String mrl = "C:\\Users\\Administrator\\Music\\MV\\test.mp4";
+                            //发送通知，修改播放列表的文件
+                            try {
+                                String exchangeKey = RabbitConstant.DY_EXCHANGE_KEY;
+                                String rountingKey = RabbitConstant.WRITE_KEY;
+                                com.rabbitmq.client.Connection conn = RabbitMQUtils.getConnection();
+                                JSONObject data = new JSONObject();
+                                data.put("writeType", WriteType.UPDATE_FILM.getType());
+                                RabbitMQUtils.SendMsg(conn,exchangeKey,rountingKey,data);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (TimeoutException e) {
+                                e.printStackTrace();
+                            }
+                            //修改播放地址
                             System.out.println(mrl);
                             application().addRecentMedia(mrl);
                             application().mediaPlayer().media().play(mrl);

@@ -20,7 +20,7 @@ public class RabbitConstant {
     // 绑定的值
     public static final String RECONNECT_KEY = "#.reconnect.#";
     // 绑定的值
-    public static final String WRITE_KEY = "#.reconnect.#";
+    public static final String WRITE_KEY = "#.write.#";
     // 绑定的值
     public static final String DY_EXCHANGE_KEY = "douyu.exchange";
 

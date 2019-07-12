@@ -49,12 +49,12 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             //发送MQ到队列去写弹幕显示文件
             String content = "用户 "+ username + " 的积分数：0";
             data.put("content",content);
-            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data);
+            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data.toString().getBytes());
             return;
         }
         String content = "用户 "+ user.getUsername() + " 的积分数：" + user.getScore();
         data.put("content",content);
-        rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data);
+        rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data.toString().getBytes());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -73,7 +73,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             //发送MQ到队列去写弹幕显示文件
             String content = "用户 "+ username + " 打卡成功！";
             data.put("content",content);
-            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data);
+            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data.toString().getBytes());
             return;
         }
         String isExist = redisUtils.get("SignIn" + uid);
@@ -100,7 +100,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             //发送MQ到队列去写弹幕显示文件
             String content = "用户 "+ username + " 打卡成功！";
             data.put("content",content);
-            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data);
+            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data.toString().getBytes());
         }
     }
 }

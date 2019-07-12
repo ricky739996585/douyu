@@ -39,7 +39,6 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     public void queryScore(String uid, String username) {
         //判断用户是否为空,如果对象为空,则新建一个
         User user = this.selectOne(new EntityWrapper<User>().eq("uuid", uid));
-        JSONObject data = new JSONObject();
         if (null == user) {
             user.setScore(0);
             user.setUuid(uid);
@@ -47,13 +46,11 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             this.insert(user);
             //发送MQ到队列去写弹幕显示文件
             String content = "用户 "+ username + " 的积分数：0";
-            data.put("content",content);
-            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data);
+            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,content.getBytes());
             return;
         }
         String content = "用户 "+ user.getUsername() + " 的积分数：" + user.getScore();
-        data.put("content",content);
-        rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data);
+        rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,content.getBytes());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -61,7 +58,6 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     public void loginSendScore(String uid, String username) {
         //判断用户是否为空,如果对象为空,则新建一个
         User user = this.selectOne(new EntityWrapper<User>().eq("uuid", uid));
-        JSONObject data = new JSONObject();
         if (null == user) {
             user.setScore(0);
             user.setUuid(uid);
@@ -71,8 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             redisUtils.set("Sign"+uid,"Sign"+uid,60*60);
             //发送MQ到队列去写弹幕显示文件
             String content = "用户 "+ username + " 打卡成功！";
-            data.put("content",content);
-            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data);
+            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,content.getBytes());
             return;
         }
         String isExist = redisUtils.get("SignIn" + uid);
@@ -98,8 +93,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             redisUtils.set("Sign"+uid,"Sign"+uid,60*60);
             //发送MQ到队列去写弹幕显示文件
             String content = "用户 "+ username + " 打卡成功！";
-            data.put("content",content);
-            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data);
+            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,content.getBytes());
         }
     }
 }

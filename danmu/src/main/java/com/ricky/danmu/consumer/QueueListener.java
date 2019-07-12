@@ -35,7 +35,6 @@ public class QueueListener {
     )
     public void getChatMsg(JSONObject data) {
         System.out.println("接受到消息了！");
-        System.out.println(data.toString());
         // 判断操作类型
         Integer order = data.getInteger("order");
         if (null == order) {
@@ -44,7 +43,7 @@ public class QueueListener {
         String uid = data.getString("uid");
         String username = data.getString("username");
         String movieName = data.getString("movieName");
-        Double score = data.getDouble("score");
+        Integer score = data.getInteger("score");
 
         //点播电影：10 ，查询积分：20 ,打卡：30
         if (OperationType.PlayMovie.getType().equals(order)) {
