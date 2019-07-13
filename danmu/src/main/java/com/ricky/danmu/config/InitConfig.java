@@ -40,6 +40,7 @@ public class InitConfig implements ApplicationRunner {
                 String uid = message.getUid();
                 //用户昵称
                 String nn = message.getNn();
+                System.out.println("弹幕内容："+content);
                 JSONObject data = DanmuUtils.validate(content);
                 if(null!=data){
                     Integer order = data.getInteger("order");
@@ -53,7 +54,7 @@ public class InitConfig implements ApplicationRunner {
                         param.put("score",data.getDouble("score"));
                     }
                     System.out.println(param.toString());
-                    rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.CHAT_KEY,param);
+                    rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.CHAT_KEY,param.toString().getBytes());
                 }
 
             }
@@ -64,7 +65,7 @@ public class InitConfig implements ApplicationRunner {
         }catch (Exception e){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("code","error");
-            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.RECONNECT_KEY,jsonObject);
+            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.RECONNECT_KEY,jsonObject.toString().getBytes());
             System.out.println("断开链接！");
         }
     }

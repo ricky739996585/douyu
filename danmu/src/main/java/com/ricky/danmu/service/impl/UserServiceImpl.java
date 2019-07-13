@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.ricky.common.constant.RabbitConstant;
 import com.ricky.common.enums.OperationType;
+import com.ricky.common.enums.WriteType;
 import com.ricky.danmu.dao.UserDao;
-import com.ricky.danmu.po.Film;
 import com.ricky.danmu.po.ScoreDetail;
 import com.ricky.danmu.po.User;
 import com.ricky.danmu.service.ScoreDetailService;
@@ -42,6 +42,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         User user = this.selectOne(new EntityWrapper<User>().eq("uuid", uid));
         JSONObject data = new JSONObject();
         if (null == user) {
+            user = new User();
             user.setScore(0);
             user.setUuid(uid);
             user.setUsername(username);
@@ -49,11 +50,13 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             //发送MQ到队列去写弹幕显示文件
             String content = "用户 "+ username + " 的积分数：0";
             data.put("content",content);
+            data.put("writeType", WriteType.UPDATE_USER_SCORE.getType());
             rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data.toString().getBytes());
             return;
         }
         String content = "用户 "+ user.getUsername() + " 的积分数：" + user.getScore();
         data.put("content",content);
+        data.put("writeType", WriteType.UPDATE_USER_SCORE.getType());
         rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data.toString().getBytes());
     }
 
@@ -64,6 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         User user = this.selectOne(new EntityWrapper<User>().eq("uuid", uid));
         JSONObject data = new JSONObject();
         if (null == user) {
+            user = new User();
             user.setScore(0);
             user.setUuid(uid);
             user.setUsername(username);
@@ -73,10 +77,11 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             //发送MQ到队列去写弹幕显示文件
             String content = "用户 "+ username + " 打卡成功！";
             data.put("content",content);
+            data.put("writeType", WriteType.UPDATE_USER_SCORE.getType());
             rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data.toString().getBytes());
             return;
         }
-        String isExist = redisUtils.get("SignIn" + uid);
+        String isExist = redisUtils.get("Sign" + uid);
         //如果为空，则代表可以继续打卡，不为空则无效
         if(StringUtils.isEmpty(isExist)){
             //增加用户的分数
@@ -100,6 +105,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             //发送MQ到队列去写弹幕显示文件
             String content = "用户 "+ username + " 打卡成功！";
             data.put("content",content);
+            data.put("writeType", WriteType.UPDATE_USER_SCORE.getType());
             rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data.toString().getBytes());
         }
     }

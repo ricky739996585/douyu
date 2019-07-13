@@ -9,6 +9,13 @@ import com.ricky.common.enums.OperationType;
  * @Date: 2019/7/8 10:28
  */
 public class DanmuUtils {
+    /**
+     *  支持命令：
+     *  1.  #查询
+     *  2.  #打卡
+     *  3.  @电影名称-分数
+     */
+
     public static JSONObject validate(String text){
         String firstStr = text.substring(0, 1);
         if("#".equals(firstStr)){

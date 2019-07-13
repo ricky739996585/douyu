@@ -48,6 +48,7 @@ public class FilmServiceImpl extends ServiceImpl<FilmDao, Film> implements FilmS
         //判断用户是否为空,如果对象为空,则新建一个
         User user = userService.selectOne(new EntityWrapper<User>().eq("uuid", uid));
         if(null == user){
+            user = new User();
             user.setScore(0);
             user.setUuid(uid);
             user.setUsername(username);

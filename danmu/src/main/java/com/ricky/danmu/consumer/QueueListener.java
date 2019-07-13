@@ -33,8 +33,10 @@ public class QueueListener {
                     exchange = @Exchange(value = RabbitConstant.DY_EXCHANGE_KEY, type = ExchangeTypes.TOPIC),
                     key = RabbitConstant.CHAT_KEY)
     )
-    public void getChatMsg(JSONObject data) {
+    public void getChatMsg(byte[] message) {
         System.out.println("接受到消息了！");
+        String jsonStr = new String(message);
+        JSONObject data = JSONObject.parseObject(jsonStr);
         // 判断操作类型
         Integer order = data.getInteger("order");
         if (null == order) {
