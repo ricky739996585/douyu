@@ -15,5 +15,10 @@ public interface UserService extends IService<User> {
      * 打卡获取积分
      */
     void loginSendScore(String uid,String username);
+
+    /**
+     * 送礼物获取积分
+     */
+    void giftScore(String uid,String username);
 }
 

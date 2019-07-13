@@ -27,7 +27,8 @@ import java.util.List;
 public class WriteListener {
 
     private static final String FILM_PATH = "C:\\Users\\Administrator\\Desktop\\ploy\\a.txt";
-    private static final String USER_SCORE_PATH = "";
+    private static final String USER_SCORE_PATH = "C:\\Users\\Administrator\\Desktop\\ploy\\b.txt";
+    private static final String GIFT_RECORD_PATH = "C:\\Users\\Administrator\\Desktop\\ploy\\c.txt";
     @Autowired
     private FilmService filmService;
 
@@ -51,6 +52,11 @@ public class WriteListener {
             String content = data.getString("content");
             if(!StringUtils.isEmpty(content)){
                 updateUserScore(content);
+            }
+        }else if(WriteType.UPDATE_GIFT_RECORD.getType().equals(writeType)){
+            String content = data.getString("content");
+            if(!StringUtils.isEmpty(content)){
+                updateGiftRecord(content);
             }
         }else {
             System.out.println(data.toJSONString());
@@ -93,6 +99,20 @@ public class WriteListener {
             e.printStackTrace();
         }
         String path = USER_SCORE_PATH;
+        WriteFileUtils.writeDataToFile(path,content);
+    }
+
+    /**
+     * 更新赠送礼物记录
+     */
+    private void updateGiftRecord(String content){
+        try {
+            //休眠5秒
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String path = GIFT_RECORD_PATH;
         WriteFileUtils.writeDataToFile(path,content);
     }
 }

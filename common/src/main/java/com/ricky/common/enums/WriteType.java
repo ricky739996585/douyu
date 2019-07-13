@@ -13,7 +13,11 @@ public enum WriteType {
     /**
      * 更新用户积分情况
      */
-    UPDATE_USER_SCORE(20);
+    UPDATE_USER_SCORE(20),
+    /**
+     * 更新送礼物记录
+     */
+    UPDATE_GIFT_RECORD(30);
 
 
     private WriteType(Integer type){

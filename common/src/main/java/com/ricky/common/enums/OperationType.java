@@ -17,7 +17,11 @@ public enum OperationType {
     /**
      * 打卡
      */
-    Login(30),;
+    Login(30),
+    /**
+     * 赠送礼物
+     */
+    GIFT(40),;
 
 
     private OperationType(Integer type){

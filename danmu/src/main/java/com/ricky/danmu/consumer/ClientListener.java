@@ -39,7 +39,7 @@ public class ClientListener {
         client.registerMessageListener(new MessageListener<DgbMsg>() {
             @Override
             public void read(DgbMsg message) {
-
+                System.out.println(message.toString());
             }
         });
         //监听弹幕消息

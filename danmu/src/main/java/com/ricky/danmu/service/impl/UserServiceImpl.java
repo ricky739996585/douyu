@@ -31,6 +31,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     @Autowired
     private ScoreDetailService scoreDetailService;
 
+    private static final Integer GIFT_SCORE = 1000;
+    private static final Integer LOGIN_SCORE = 100;
     /**
      * 查询用户积分
      * @param uid   用户ID
@@ -68,12 +70,14 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         JSONObject data = new JSONObject();
         if (null == user) {
             user = new User();
-            user.setScore(0);
+            user.setScore(LOGIN_SCORE);
             user.setUuid(uid);
             user.setUsername(username);
             this.insert(user);
             //设置打卡限制，1个小时打卡一次
             redisUtils.set("Sign"+uid,"Sign"+uid,60*60);
+            //增加积分记录
+            insertScoreRecord(user.getId(),uid,LOGIN_SCORE,OperationType.Login);
             //发送MQ到队列去写弹幕显示文件
             String content = "用户 "+ username + " 打卡成功！";
             data.put("content",content);
@@ -90,16 +94,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             if(result1<0){
                 throw new RuntimeException();
             }
-            //增加一条积分消费记录
-            ScoreDetail detail = new ScoreDetail();
-            detail.setOperationType(OperationType.Login.getType());
-            detail.setScore(score);
-            detail.setUserId(user.getId());
-            detail.setUuid(uid);
-            boolean result2 = scoreDetailService.insert(detail);
-            if(!result2){
-                throw new RuntimeException();
-            }
+            //增加积分记录
+            insertScoreRecord(user.getId(),uid,score,OperationType.Login);
             //加分的同时，设置一个限制
             redisUtils.set("Sign"+uid,"Sign"+uid,60*60);
             //发送MQ到队列去写弹幕显示文件
@@ -107,6 +103,57 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             data.put("content",content);
             data.put("writeType", WriteType.UPDATE_USER_SCORE.getType());
             rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data.toString().getBytes());
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void giftScore(String uid, String username) {
+        //判断用户是否为空,如果对象为空,则新建一个
+        User user = this.selectOne(new EntityWrapper<User>().eq("uuid", uid));
+        JSONObject data = new JSONObject();
+        if (null == user) {
+            user = new User();
+            user.setScore(GIFT_SCORE);
+            user.setUuid(uid);
+            user.setUsername(username);
+            this.insert(user);
+
+            //增加积分记录
+            insertScoreRecord(user.getId(),uid,GIFT_SCORE,OperationType.GIFT);
+            //发送MQ到队列去写弹幕显示文件
+            String content = "感谢 "+ username + " 送的礼物！";
+            data.put("content",content);
+            data.put("writeType", WriteType.UPDATE_GIFT_RECORD.getType());
+            rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data.toString().getBytes());
+            return;
+        }
+        //增加用户的积分数
+        Integer result = this.baseMapper.updateAddScore(GIFT_SCORE, uid);
+        if(result<0){
+            throw new RuntimeException();
+        }
+        //增加积分记录
+        insertScoreRecord(user.getId(),uid,GIFT_SCORE,OperationType.GIFT);
+        //发送MQ到队列去写弹幕显示文件
+        String content = "感谢 "+ username + " 送的礼物！";
+        data.put("content",content);
+        data.put("writeType", WriteType.UPDATE_GIFT_RECORD.getType());
+        rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.WRITE_KEY,data.toString().getBytes());
+    }
+
+    /**
+     * 增加一条积分消费记录
+     */
+    private void insertScoreRecord(Long userId,String uid,Integer score,OperationType type){
+        ScoreDetail detail = new ScoreDetail();
+        detail.setOperationType(type.getType());
+        detail.setScore(score);
+        detail.setUserId(userId);
+        detail.setUuid(uid);
+        boolean result = scoreDetailService.insert(detail);
+        if(!result){
+            throw new RuntimeException();
         }
     }
 }

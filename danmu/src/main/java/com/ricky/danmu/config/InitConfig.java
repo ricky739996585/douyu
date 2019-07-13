@@ -22,12 +22,21 @@ public class InitConfig implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         //以下是消息监听器
+        //6639458
         DouYuClient client = new DouYuClient("openbarrage.douyutv.com", 8601, "6639458");
         //监听礼物弹幕
         client.registerMessageListener(new MessageListener<DgbMsg>() {
             @Override
             public void read(DgbMsg message) {
-
+                //用户ID
+                String uid = message.getUid();
+                //用户昵称
+                String nn = message.getNn();
+                System.out.println("礼物！礼物！礼物！礼物！---------"+uid);
+                JSONObject data = new JSONObject();
+                data.put("uid",uid);
+                data.put("username",nn);
+                rabbitTemplate.convertAndSend(RabbitConstant.DY_EXCHANGE_KEY,RabbitConstant.DSG_KEY,data.toString().getBytes());
             }
         });
         //监听弹幕消息
