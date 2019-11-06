@@ -20,14 +20,28 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 /**
+ * @Description: 用于回复弹幕操作的监听器，当接收到指令后，修改文件中的内容
+ * 直播软件可以监听文件的内容并投射到屏幕中展示
+ * 1.修改播放信息列表的内容
+ * 2.修改用户查看积分情况的内容
+ * 3.修改用户送礼物记录的内容
+ *
  * @Author: ricky
- * @Date: 2019/7/10 10:42
+ * @Date: 2019/11/6 17:21
  */
 @Component
 public class WriteListener {
-
+    /**
+     *  播放信息列表的内容的文件
+     */
     private static final String FILM_PATH = "C:\\Users\\Administrator\\Desktop\\ploy\\a.txt";
+    /**
+     *  用户查看积分情况的内容的文件
+     */
     private static final String USER_SCORE_PATH = "C:\\Users\\Administrator\\Desktop\\ploy\\b.txt";
+    /**
+     *  用户送礼物记录的内容的文件
+     */
     private static final String GIFT_RECORD_PATH = "C:\\Users\\Administrator\\Desktop\\ploy\\c.txt";
     @Autowired
     private FilmService filmService;
@@ -42,7 +56,6 @@ public class WriteListener {
         String jsonStr = new String(message);
         JSONObject data = JSONObject.parseObject(jsonStr);
         Integer writeType = data.getInteger("writeType");
-
         if(null == writeType){
             return;
         }

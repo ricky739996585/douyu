@@ -47,3 +47,8 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
+
+client:
+  host: openbarrage.douyutv.com  #连接斗鱼弹幕服务端host
+  roomId: 6639458  #抓取弹幕的房间号ID
+  port: 8601 #默认端口
