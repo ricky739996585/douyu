@@ -14,6 +14,12 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * @Description: 接收用户的弹幕指令操作，有如右等操作 --》点播电影，查询积分 ,打卡
+ * @Author: ricky
+ * @Date: 2019/11/6 17:17
+ */
 @Component
 public class QueueListener {
     private final UserService userService;

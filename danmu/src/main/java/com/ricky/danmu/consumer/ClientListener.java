@@ -15,12 +15,25 @@ import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * @Description: 弹幕客户端监听器，用于当弹幕服务器断开连接时自动重连服务器
+ * @Author: ricky
+ * @Date: 2019/11/6 17:12
+ */
 @Component
 public class ClientListener {
     @Autowired
     private RabbitTemplate rabbitTemplate;
+    @Value("${client.host}")
+    private String host;
+    @Value("${client.roomId}")
+    private String roomId;
+    @Value("${client.port}")
+    private Integer port;
 
     @RabbitListener(containerFactory = "rabbitListenerContainerFactory",
             bindings = @QueueBinding(
@@ -34,7 +47,7 @@ public class ClientListener {
         JSONObject data = JSONObject.parseObject(jsonStr);
         System.out.println(data.toString());
         //以下是消息监听器
-        DouYuClient client = new DouYuClient("openbarrage.douyutv.com", 8601, "6639458");
+        DouYuClient client = new DouYuClient(host, port, roomId);
         //监听礼物弹幕
         client.registerMessageListener(new MessageListener<DgbMsg>() {
             @Override
@@ -57,7 +70,6 @@ public class ClientListener {
                 if(null!=data){
                     Integer order = data.getInteger("order");
                     JSONObject param = new JSONObject();
-
                     param.put("uid",uid);
                     param.put("username",nn);
                     param.put("order",order);

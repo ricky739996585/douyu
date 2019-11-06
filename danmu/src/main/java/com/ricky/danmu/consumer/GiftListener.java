@@ -16,6 +16,12 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @Description: 礼物弹幕监听器，当有人在房间送礼物后可以进行一些操作
+ * 下面是给指定的用户增加用户积分（该积分只保存在自己的数据库中）
+ * @Author: ricky
+ * @Date: 2019/11/6 17:14
+ */
 @Component
 public class GiftListener {
     private final UserService userService;
