@@ -26,9 +26,9 @@ import java.util.List;
 @Component
 public class WriteListener {
 
-    private static final String FILM_PATH = "C:\\Users\\Administrator\\Desktop\\ploy\\a.txt";
-    private static final String USER_SCORE_PATH = "C:\\Users\\Administrator\\Desktop\\ploy\\b.txt";
-    private static final String GIFT_RECORD_PATH = "C:\\Users\\Administrator\\Desktop\\ploy\\c.txt";
+    private static final String FILM_PATH = "C:\\Users\\ricky\\Desktop\\弹幕文件\\播放列表.txt";
+    private static final String USER_SCORE_PATH = "C:\\Users\\ricky\\Desktop\\弹幕文件\\用户积分情况.txt";
+    private static final String GIFT_RECORD_PATH = "C:\\Users\\ricky\\Desktop\\弹幕文件\\礼物列表.txt";
     @Autowired
     private FilmService filmService;
 
@@ -46,14 +46,14 @@ public class WriteListener {
         if(null == writeType){
             return;
         }
-        if(WriteType.UPDATE_FILM.getType().equals(writeType)){
+        if(WriteType.UPDATE_FILM.getType()==writeType){
             updateFilm();
-        }else if(WriteType.UPDATE_USER_SCORE.getType().equals(writeType)){
+        }else if(WriteType.UPDATE_USER_SCORE.getType()==writeType){
             String content = data.getString("content");
             if(!StringUtils.isEmpty(content)){
                 updateUserScore(content);
             }
-        }else if(WriteType.UPDATE_GIFT_RECORD.getType().equals(writeType)){
+        }else if(WriteType.UPDATE_GIFT_RECORD.getType()==writeType){
             String content = data.getString("content");
             if(!StringUtils.isEmpty(content)){
                 updateGiftRecord(content);
