@@ -16,6 +16,7 @@ public class RabbitMQUtils {
     private static final Integer PORT = 5672;
     private static final String USERNAME = "ricky";
     private static final String PASSWORD = "123456";
+    private static final String VIRTUAL_HOST = "ricky_test";
 
     public static Connection getConnection() throws IOException, TimeoutException {
         //定义连接工厂
@@ -23,7 +24,7 @@ public class RabbitMQUtils {
         factory.setHost(HOST);
         factory.setPort(PORT);
         //设置vhost
-        factory.setVirtualHost("ricky_test");
+        factory.setVirtualHost(VIRTUAL_HOST);
         factory.setUsername(USERNAME);
         factory.setPassword(PASSWORD);
         Connection connection = factory.newConnection();
