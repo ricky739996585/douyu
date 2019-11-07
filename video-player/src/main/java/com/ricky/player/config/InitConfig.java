@@ -13,13 +13,13 @@ import uk.co.caprica.vlcj.support.Info;
 public class InitConfig implements ApplicationRunner {
     @Autowired
     private RabbitTemplate rabbitTemplate;
-    @Autowired
-    private VlcjPlayer player;
+//    @Autowired
+//    private VlcjPlayer player;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         Info info = Info.getInstance();
-
+        VlcjPlayer player = new VlcjPlayer();
         System.out.printf("vlcj             : %s%n", info.vlcjVersion() != null ? info.vlcjVersion() : "<version not available>");
         System.out.printf("os               : %s%n", player.val(info.os()));
         System.out.printf("java             : %s%n", player.val(info.javaVersion()));

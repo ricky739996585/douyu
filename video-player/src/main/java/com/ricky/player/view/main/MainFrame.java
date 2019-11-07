@@ -483,37 +483,35 @@ public final class MainFrame extends BaseFrame {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-
-                        if(limit%2 == 0){
-                            //获取排名最高的电影
-                            Connection connection = DataBaseUtils.getConnection(JDBC_URL, USERNAME, PASSWORD);
-                            HashMap<String, Object> highFilm = DataBaseUtils.getHighFilm(connection);
-                            //设置正在播放的电影 status = 0
-                            DataBaseUtils.updatePlayingFilm(connection);
-                            //设置排名最高的电影status = 1
-                            DataBaseUtils.updateFilmStatus(connection,highFilm.get("id").toString());
-                            videoContentPane.showVideo();
-                            String mrl = highFilm.get("url").toString();
-//                            String mrl = "C:\\Users\\Administrator\\Music\\MV\\test.mp4";
-                            //发送通知，修改播放列表的文件
-                            try {
-                                String exchangeKey = RabbitConstant.DY_EXCHANGE_KEY;
-                                String rountingKey = RabbitConstant.WRITE_KEY;
-                                com.rabbitmq.client.Connection conn = RabbitMQUtils.getConnection();
-                                JSONObject data = new JSONObject();
-                                data.put("writeType", WriteType.UPDATE_FILM.getType());
-                                RabbitMQUtils.SendMsg(conn,exchangeKey,rountingKey,data);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (TimeoutException e) {
-                                e.printStackTrace();
-                            }
-                            //修改播放地址
-                            System.out.println(mrl);
-                            application().addRecentMedia(mrl);
-                            application().mediaPlayer().media().play(mrl);
+                        //获取排名最高的电影
+                        Connection connection = DataBaseUtils.getConnection(JDBC_URL, USERNAME, PASSWORD);
+                        HashMap<String, Object> highFilm = DataBaseUtils.getHighFilm(connection);
+                        //设置正在播放的电影 status = 0
+                        DataBaseUtils.updatePlayingFilm(connection);
+                        //设置排名最高的电影status = 1
+                        DataBaseUtils.updateFilmStatus(connection,highFilm.get("id").toString());
+                        videoContentPane.showVideo();
+                        String mrl = highFilm.get("url").toString();
+                        //发送通知，修改播放列表的文件
+                        try {
+                            String exchangeKey = RabbitConstant.DY_EXCHANGE_KEY;
+                            String rountingKey = RabbitConstant.WRITE_KEY;
+                            com.rabbitmq.client.Connection conn = RabbitMQUtils.getConnection();
+                            JSONObject data = new JSONObject();
+                            data.put("writeType", WriteType.UPDATE_FILM.getType());
+                            RabbitMQUtils.SendMsg(conn,exchangeKey,rountingKey,data);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (TimeoutException e) {
+                            e.printStackTrace();
                         }
-                        limit++;
+                        //修改播放地址
+                        application().addRecentMedia(mrl);
+                        application().mediaPlayer().media().play(mrl);
+//                        if(limit%2 == 0){
+//
+//                        }
+//                        limit++;
 
                     }
                 });
