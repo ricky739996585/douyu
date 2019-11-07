@@ -48,7 +48,7 @@
 
 喜欢的大佬们可以打赏一下
 
-<div align="center">
+<div>
 
 <img src="/img/wxpay.jpg" height="200" width="200" >
 
