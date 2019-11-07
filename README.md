@@ -31,19 +31,24 @@
 在启动项目之前，需要修改一些参数配置：
 
 1. 数据库Mysql配置：
-![](/img/videoDB.png)
+
+   ![](/img/videoDB.png)
+
 2. 消息队列RabbitMQ配置：
-![](/img/videoRabbitMQ.png)
+
+   ![](/img/videoRabbitMQ.png)
 
 配置完后，启动主程序VideoPlayerApplication就可以了，然后会打开播放器，打开播放器不会默认播放，第一次播放电影需要手动选择文件播放，第一个文件播放完后就会根据数据库的数据来播放电影。
+
 ![](/img/video.png)
 
 虽然界面比较简单，但是功能还是挺丰富的，毕竟是开源的播放器。
+
 通过这2个项目，再结合OBS的直播软件，就可以做到直播放电影的节目效果了，赶紧去试一下把。。
 
 喜欢的大佬们可以打赏一下
 
-![](/img/wxpay.png)![](/img/alipay.png)
+![](/img/wxpay.jpg)![](/img/alipay.jpg)
 
 
 
