@@ -48,7 +48,12 @@
 
 喜欢的大佬们可以打赏一下
 
-![](/img/wxpay.jpg)![](/img/alipay.jpg)
+<div align="center">
 
+<img src="/img/wxpay.jpg" height="200" width="200" >
+
+<img src="/img/alipay.jpg" height="200" width="200" >
+
+ </div>
 
 
