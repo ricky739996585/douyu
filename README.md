@@ -50,9 +50,9 @@
 
 <div>
 
-<img src="/img/wxpay.jpg" height="200" width="200" >
+<img src="/img/wxpay.jpg" height="300px" width="300px" >
 
-<img src="/img/alipay.jpg" height="200" width="200" >
+<img src="/img/alipay.jpg" height="300px" width="300px" >
 
  </div>
 
