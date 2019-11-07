@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -11,12 +12,14 @@ import java.util.concurrent.TimeoutException;
  * @Date: 2019/7/12 9:15
  */
 public class RabbitMQUtils {
-
-    private static final String HOST = "localhost";
-    private static final Integer PORT = 5672;
-    private static final String USERNAME = "ricky";
-    private static final String PASSWORD = "123456";
-    private static final String VIRTUAL_HOST = "ricky_test";
+    //通过获取配置文件来获取配置
+    private static final String RESOURCE_BUNDLE_BASE_NAME = "strings/config";
+    private static final ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_BASE_NAME);
+    private static final String HOST = resourceBundle.getString("rabbitmq.host");
+    private static final Integer PORT = Integer.valueOf(resourceBundle.getString("rabbitmq.port"));
+    private static final String USERNAME = resourceBundle.getString("rabbitmq.username");
+    private static final String PASSWORD = resourceBundle.getString("rabbitmq.password");
+    private static final String VIRTUAL_HOST = resourceBundle.getString("rabbitmq.virtualHost");
 
     public static Connection getConnection() throws IOException, TimeoutException {
         //定义连接工厂

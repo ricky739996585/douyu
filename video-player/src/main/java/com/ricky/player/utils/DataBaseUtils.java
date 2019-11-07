@@ -1,13 +1,9 @@
 package com.ricky.player.utils;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.ResourceBundle;
 
 
 /**
@@ -16,9 +12,8 @@ import java.util.Date;
  */
 public class DataBaseUtils {
 
-  private static Connection connectionA;
-  private static Connection connectionB;
-  public static final Logger logger = LoggerFactory.getLogger(DataBaseUtils.class);
+  private static final String RESOURCE_BUNDLE_BASE_NAME = "strings/config";
+  private static final ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_BASE_NAME);
 
   static {
     try {
@@ -26,6 +21,21 @@ public class DataBaseUtils {
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
+  }
+
+  public static Connection getConnection() {
+    Connection conn = null;
+    //默认是通过获取配置文件获取配置
+    String url = resourceBundle.getString("jdbc.url");
+    String username = resourceBundle.getString("jdbc.username");
+    String password = resourceBundle.getString("jdbc.password");
+    try {
+      conn = DriverManager.getConnection(url, username, password);
+      conn.setAutoCommit(true);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return conn;
   }
 
   public static Connection getConnection(String url, String username, String password) {
@@ -118,16 +128,7 @@ public class DataBaseUtils {
 
   public static void main(String[] args) {
 
-    String urlA = "jdbc:mysql://localhost:3306/user?useSSL=true";
-    String usernameA = "root";
-    String passwordA = "123456";
-
-    Connection connection = getConnection(urlA, usernameA, passwordA);
-    HashMap<String, Object> highFilm = getHighFilm(connection);
-
-
-    close(connection);
-
+    Connection connection = getConnection();
 
   }
 }
