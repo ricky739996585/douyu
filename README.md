@@ -46,11 +46,11 @@
 
 喜欢的大佬们可以打赏一下
 
-<div align="center">
+<div>
 
-<img src="/img/wxpay.jpg" height="330" width="200" >
+<img src="/img/wxpay.jpg" height="250px" width="250px" >
 
-<img src="/img/alipay.jpg" height="330" width="200" >
+<img src="/img/alipay.jpg" height="250px" width="250px" >
 
  </div>
 
